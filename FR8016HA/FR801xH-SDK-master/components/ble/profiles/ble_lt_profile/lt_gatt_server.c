@@ -115,6 +115,13 @@ void my_uart_callback(void* arg, uint8_t data)
 extern int pa1wakeflag;
 int notify_ble_to_dev(uint8_t *data,int  size)
 {
+
+	if(size != 0)
+	{
+		ltntf_data(0,LT_IDX_CHAR1_VALUE,data,size);
+		return 0;
+	}
+
 	if(size !=0)
 	{
 	if (data[0] == 0xA9 && data[1] == 0xA9 && data[2] == 0x01)

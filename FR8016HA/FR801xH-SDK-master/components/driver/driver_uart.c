@@ -1,4 +1,3 @@
-
 /**
  * Copyright (c) 2019, Freqchip
  *
@@ -11,6 +10,7 @@
  * INCLUDES
  */
 #include <stdint.h>
+#include <stddef.h>  // 添加此行以引入 NULL 定义
 #include "driver_plf.h"
 #include "driver_uart.h"
 #include "driver_gpio.h"
@@ -43,6 +43,31 @@ os_timer_t uart0_recv_timer; // recive data timer
 
 S_UART0REC s_uart0rec = {0};
 S_UART1REC s_uart1rec = {0};
+
+// ******************** ADDED ********************
+// Pointers for frame reception callbacks
+static uart_frame_rx_callback_t g_uart0_frame_cb = NULL;
+static uart_frame_rx_callback_t g_uart1_frame_cb = NULL;
+
+/**
+ * @brief Register a callback function to be called when UART0 frame reception times out.
+ * @param cb  The function pointer to call.
+ */
+void uart0_register_frame_callback(uart_frame_rx_callback_t cb)
+{
+	g_uart0_frame_cb = cb;
+}
+
+/**
+ * @brief Register a callback function to be called when UART1 frame reception times out.
+ * @param cb  The function pointer to call.
+ */
+void uart1_register_frame_callback(uart_frame_rx_callback_t cb)
+{
+	g_uart1_frame_cb = cb;
+}
+// ***********************************************
+
 
 int uart0_recvsta_get()
 {
@@ -92,20 +117,53 @@ uint8_t uart1_recflag_get()
 	return s_uart1rec.uart1recvflag;
 }
 
+// ******************** MODIFIED ********************
 void uart0_recv_func(void *arg)
 {
-	co_printf("recv data over now send to phone.\r\n");
+   // co_printf("uart0_recv_func.\r\n");
 
-	s_uart0rec.uart0recvflag = 1;
-	return;
+    s_uart0rec.uart0recvflag = 1;
+
+    // 检查回调函数和有效数据长度
+    if (g_uart0_frame_cb)
+    {
+        uint8_t *buffer = uart0_recbuf_get();
+        uint32_t len = uart0_reclen_get();
+        
+        // 仅当数据长度大于0时复制并回调
+        if (len > 0)
+        {
+            static uint8_t copy_buf[512];  // 静态缓冲区避免堆分配
+            memcpy(copy_buf, buffer, len); // 复制原始数据
+            g_uart0_frame_cb(copy_buf, len); // 传递复制后的缓冲区
+			uart0_recvsta_clear(); // 清除接收状态标志
+        }
+    }
+    return;
 }
-
+// ******************** MODIFIED ********************
 void uart1_recv_func(void *arg)
 {
-	co_printf("recv data over now send to phone.\r\n");
+   // co_printf("recv data over now send to phone.\r\n");
 
-	s_uart1rec.uart1recvflag = 1;
-	return;
+    s_uart1rec.uart1recvflag = 1;
+
+    // 检查回调函数和有效数据长度
+    if (g_uart1_frame_cb)
+    {
+        uint8_t *buffer = uart1_recbuf_get();
+        uint32_t len = uart1_reclen_get();
+        
+        // 仅当数据长度大于0时复制并回调
+        if (len > 0)
+        {
+            static uint8_t copy_buf[512];  // 静态缓冲区避免堆分配
+            memcpy(copy_buf, buffer, len); // 复制原始数据
+            g_uart1_frame_cb(copy_buf, len); // 传递复制后的缓冲区
+			uart1_recvsta_clear(); // 清除接收状态标志
+        }
+    }
+    return;
 }
 
 void uart1_timer_stop()
@@ -125,7 +183,7 @@ __attribute__((section("ram_code"))) void uart0_isr_ram(void)
 	volatile struct uart_reg_t *const uart0_reg = (volatile struct uart_reg_t *)UART0;
 
 	int_id = uart0_reg->u3.iir.int_id;
-	co_printf("uart0_isr_ram.\r\n");
+//	co_printf("uart0_isr_ram.\r\n");
 	if (int_id == 0x04 || int_id == 0x0c) /* Receiver data available or Character time-out indication */
 	{
 		while (uart0_reg->lsr & 0x01)
@@ -150,7 +208,7 @@ __attribute__((section("ram_code"))) void uart1_isr_ram(void)
 	uint8_t int_id;
 	uint8_t c;
 	volatile struct uart_reg_t *const uart1_reg = (volatile struct uart_reg_t *)UART1;
-	co_printf("uart1_isr_ram.\r\n");
+//	co_printf("uart1_isr_ram.\r\n");
 	int_id = uart1_reg->u3.iir.int_id;
 	if (int_id == 0x04 || int_id == 0x0c) /* Receiver data available or Character time-out indication */
 	{
@@ -169,7 +227,6 @@ __attribute__((section("ram_code"))) void uart1_isr_ram(void)
 	else if (int_id == 0x06)
 	{
 		volatile uint32_t line_status = uart1_reg->lsr;
-		// printf("line:%d.\r\n",line_status);
 	}
 
 	// s_uart1rec.uart1recvflag=1;

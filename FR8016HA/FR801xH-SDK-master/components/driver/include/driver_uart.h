@@ -33,14 +33,14 @@ union uart_data_dll_t
 /*
 Bit     Name    Type        Function Description
 7:4     RSVD    R           These bits are always cleared (Reserved bits).
-3       EMSI     W/R        â€?â€? Enable Modem Status Interrupt (EMSI)
-                                    â€?â€? Disable EMSI
-2       ERLSI   W/R         â€?â€? Enable Receive Line Status Interrupt (ERLSI)
-                                    â€?â€? Disable ERLSI
-1       ETI      W/R          â€?â€? Enable THR Empty Interrupt (ETI)
-                                    â€?â€? Disable ETI
-0       ERDI    W/R          â€?â€? Enable Received Data Available Interrupt (ERDI)
-                                    â€?â€? Disable ERDI
+3       EMSI     W/R        éˆ¥?éˆ¥? Enable Modem Status Interrupt (EMSI)
+                                    éˆ¥?éˆ¥? Disable EMSI
+2       ERLSI   W/R         éˆ¥?éˆ¥? Enable Receive Line Status Interrupt (ERLSI)
+                                    éˆ¥?éˆ¥? Disable ERLSI
+1       ETI      W/R          éˆ¥?éˆ¥? Enable THR Empty Interrupt (ETI)
+                                    éˆ¥?éˆ¥? Disable ETI
+0       ERDI    W/R          éˆ¥?éˆ¥? Enable Received Data Available Interrupt (ERDI)
+                                    éˆ¥?éˆ¥? Disable ERDI
 */
 struct uart_ier_t   /*Interrupt Enable Register*/
 {
@@ -69,7 +69,7 @@ Bit     Name    Type    Function Description
 3:0 Interrupt   RO       Bit 0: When interrupt is pending this bit is zero else it is one
         ID Bit                Bit 1~3: Interrupt ID
                                 Priority Interrupt ID Bit[3:0]
-                                *           0001    No interrupt is pending
+                                * 0001    No interrupt is pending
                                 1           0110    Receiver line status
                                 2           0100    Receiver data available
                                 3           1100    Character time-out indication
@@ -94,8 +94,8 @@ Bit     Name        Type    Function Description
                                         01 --- 2 character in the FIFO
                                         10 --- FIFO 1/4 full
                                         11 --- FIFO 1/2 full
-3       DMA          WO         â€?â€?TXRDYN,RXRDYN signal work in DMA mode 0
-        Mode                        â€?â€?TXRDYN,RXRDYN signal work in DMA mode 1
+3       DMA          WO         éˆ¥?éˆ¥?TXRDYN,RXRDYN signal work in DMA mode 0
+        Mode                        éˆ¥?éˆ¥?TXRDYN,RXRDYN signal work in DMA mode 1
 
 2      Tx FIFO      WO          When this bit is set, transmitter FIFO reset. The logic one
         Reset                        written to this bit is self clearing.
@@ -203,23 +203,23 @@ If bit5 is 0, stick parity is disabled
 Bit     Name        Type    Function Description
 7:6     RSVD        00       These bits are always cleared (Reserved bits).
 5       AFE            W/R     Auto Flow control Enable
-                                        â€?â€? Enable AFE
-                                        â€?â€? Disable AFE
+                                        éˆ¥?éˆ¥? Enable AFE
+                                        éˆ¥?éˆ¥? Disable AFE
 4       LOOP         W/R      Loop Back Mode
                                         When set, this bit provides local loop back feature for
                                         diagnostic testing of the UART.
 3       OUT2        W/R       User Designated Output
-                                        â€?â€? set OUT2n to â€?â€? active
-                                        â€?â€? set OUT2n to â€?â€? normal
+                                        éˆ¥?éˆ¥? set OUT2n to éˆ¥?éˆ¥? active
+                                        éˆ¥?éˆ¥? set OUT2n to éˆ¥?éˆ¥? normal
 2       OUT1        W/R       User Designated Output
-                                        â€?â€? set OUT1n to â€?â€? active
-                                        â€?â€? set OUT1n to â€?â€? normal
+                                        éˆ¥?éˆ¥? set OUT1n to éˆ¥?éˆ¥? active
+                                        éˆ¥?éˆ¥? set OUT1n to éˆ¥?éˆ¥? normal
 1       RTS          W/R        Request to Send
-                                        â€?â€? set RTSn to â€?â€? active
-                                        â€?â€? set RTSn to â€?â€? normal
+                                        éˆ¥?éˆ¥? set RTSn to éˆ¥?éˆ¥? active
+                                        éˆ¥?éˆ¥? set RTSn to éˆ¥?éˆ¥? normal
 0       DTR         W/R         Data Terminal Ready
-                                        â€?â€? set DTRn to â€?â€? active
-                                        â€?â€? set DTRn to â€?â€? normal
+                                        éˆ¥?éˆ¥? set DTRn to éˆ¥?éˆ¥? active
+                                        éˆ¥?éˆ¥? set DTRn to éˆ¥?éˆ¥? normal
 */
 struct uart_mcr_t  /*Modem Control Register*/
 {
@@ -402,6 +402,18 @@ typedef struct
     uint8_t stop_bit;   //1 = stop bit is 1,  2 = stop bit is 1.5 for 5bit data OR stop bit is 2 for 6,7,8 bit data,
 } uart_param_t;
 
+
+// ******************** ADDED ********************
+/**
+ * @brief Callback function type for frame reception.
+ * This callback is executed from the Timer task context when a
+ * frame reception timer (50ms) expires.
+ */
+typedef void (*uart_frame_rx_callback_t)(uint8_t *buffer, uint32_t len);
+// ***********************************************
+
+
+
 /*
  * FUNCTION
  */
@@ -410,10 +422,10 @@ typedef struct
  * @fn      uart_init
  *
  * @brief   initialize the uart module. Before calling this function, corresponding
- *          IO mux should be configured correctly.
+ * IO mux should be configured correctly.
  *
  * @param   uart_addr   - which uart will be initialized, UART0 or UART1.
- *          bandrate    - such as BAUD_RATE_115200.
+ * bandrate    - such as BAUD_RATE_115200.
  *
  * @return  None.
  */
@@ -436,8 +448,8 @@ void uart_finish_transfers(uint32_t uart_addr);
  * @brief   get several byte from UART bus with block mode.
  *
  * @param   uart_addr   - which uart will be used, UART0 or UART1.
- *          bufptr      - store position of data to be received
- *          size        - length of data to be received
+ * bufptr      - store position of data to be received
+ * size        - length of data to be received
  *
  * @return  None.
  */
@@ -449,8 +461,8 @@ void uart_read(uint32_t uart_addr, uint8_t *buf, uint32_t size);
  * @brief   send several byte to UART bus with block mode.
  *
  * @param   uart_addr   - which uart will be used, UART0 or UART1.
- *          bufptr      - store position of data to be send
- *          size        - length of data to be send
+ * bufptr      - store position of data to be send
+ * size        - length of data to be send
  *
  * @return  None.
  */
@@ -462,7 +474,7 @@ void uart_write(uint32_t uart_addr, const uint8_t *bufptr, uint32_t size);
  * @brief   send a byte to UART bus, return until tx fifo is empty.
  *
  * @param   uart_addr   - which uart will be used, UART0 or UART1.
- *          c           - data to be send
+ * c           - data to be send
  *
  * @return  None.
  */
@@ -474,7 +486,7 @@ void uart_putc_noint(uint32_t uart_addr, uint8_t c);
  * @brief   send a byte to UART bus without the byte is sent.
  *
  * @param   uart_addr   - which uart will be used, UART0 or UART1.
- *          c           - data to be send
+ * c           - data to be send
  *
  * @return  None.
  */
@@ -486,8 +498,8 @@ void uart_putc_noint_no_wait(uint32_t uart_addr, uint8_t c);
  * @brief   send several bytes to UART bus, return until tx fifo is empty.
  *
  * @param   uart_addr   - which uart will be used, UART0 or UART1.
- *          d           - data buffer pointer
- *          size        - how many bytes to be send.
+ * d           - data buffer pointer
+ * size        - how many bytes to be send.
  *
  * @return  None.
  */
@@ -499,8 +511,8 @@ void uart_put_data_noint(uint32_t uart_addr, const uint8_t *d, int size);
  * @brief   get data with specified length, return until all data are acquired.
  *
  * @param   uart_addr   - which uart will be used, UART0 or UART1.
- *          d           - data buffer pointer
- *          size        - how many bytes to be read.
+ * d           - data buffer pointer
+ * size        - how many bytes to be read.
  *
  * @return  None.
  */
@@ -510,11 +522,11 @@ void uart_get_data_noint(uint32_t uart_addr, uint8_t *buf, int size);
  * @fn      uart_get_data_nodelay_noint
  *
  * @brief   get data with specified length, return until rx fifo is empty 
- *          or all data are acquired.
+ * or all data are acquired.
  *
  * @param   uart_addr   - which uart will be used, UART0 or UART1.
- *          d           - data buffer pointer
- *          size        - how many bytes to be read.
+ * d           - data buffer pointer
+ * size        - how many bytes to be read.
  *
  * @return  how many bytes have been read, may be less than parameter size.
  */
@@ -524,11 +536,11 @@ int uart_get_data_nodelay_noint(uint32_t uart_addr, uint8_t *buf, int size);
  * @fn      uart0_read
  *
  * @brief   get data with specified length. Interrup will be enable inside this function,
- *          callback will be called once all data are acquired.
+ * callback will be called once all data are acquired.
  *
  * @param   bufptr  - ram pointer used to store read data.
- *          size    - how many bytes to be read.
- *          callback- callback function when all data are acquired.
+ * size    - how many bytes to be read.
+ * callback- callback function when all data are acquired.
  *
  * @return  None.
  */
@@ -539,11 +551,11 @@ void uart0_read_for_hci(uint8_t *bufptr, uint32_t size, uart_int_callback callba
  * @fn      uart1_read
  *
  * @brief   get data with specified length. Interrup will be enable inside this function,
- *          callback will be called once all data are acquired.
+ * callback will be called once all data are acquired.
  *
  * @param   bufptr  - ram pointer used to store read data.
- *          size    - how many bytes to be read.
- *          callback- callback function when all data are acquired.
+ * size    - how many bytes to be read.
+ * callback- callback function when all data are acquired.
  *
  * @return  None.
  */
@@ -554,11 +566,11 @@ void uart1_read_for_hci(uint8_t *bufptr, uint32_t size, uart_int_callback callba
  * @fn      uart0_write
  *
  * @brief   send data with specified length. callback will be called once all 
- *          data are sent.
+ * data are sent.
  *
  * @param   bufptr  - ram pointer used to store send data.
- *          size    - how many bytes to be sent.
- *          callback- callback function when all data are sent.
+ * size    - how many bytes to be sent.
+ * callback- callback function when all data are sent.
  *
  * @return  None.
  */
@@ -569,11 +581,11 @@ void uart0_write_for_hci(uint8_t *bufptr, uint32_t size, uart_int_callback callb
  * @fn      uart1_write
  *
  * @brief   send data with specified length. callback will be called once all 
- *          data are sent.
+ * data are sent.
  *
  * @param   bufptr  - ram pointer used to store send data.
- *          size    - how many bytes to be sent.
- *          callback- callback function when all data are sent.
+ * size    - how many bytes to be sent.
+ * callback- callback function when all data are sent.
  *
  * @return  None.
  */
@@ -583,14 +595,13 @@ void uart1_write_for_hci(uint8_t *bufptr, uint32_t size, uart_int_callback callb
  * @fn      uart_init1
  *
  * @brief   Another API to initialize the uart module. Before calling this function, corresponding
- *          IO mux should be configured correctly.
+ * IO mux should be configured correctly.
  *
  * @param   uart_addr   - which uart will be initialized, UART0 or UART1.
- *          bandrate    - such as BAUD_RATE_115200.
+ * bandrate    - such as BAUD_RATE_115200.
  *
  * @return  None.
- * 
- *  example:    
+ * * example:    
     uart_param_t param =
     {
         .baud_rate = 115200,
@@ -621,7 +632,20 @@ uint8_t uart1_recflag_get();
 int uart1_recvsta_clear();
 
 
+// ******************** ADDED ********************
+/**
+ * @brief Register a callback function to be called when UART0 frame reception times out.
+ * @param cb  The function pointer to call.
+ */
+void uart0_register_frame_callback(uart_frame_rx_callback_t cb);
+
+/**
+ * @brief Register a callback function to be called when UART1 frame reception times out.
+ * @param cb  The function pointer to call.
+ */
+void uart1_register_frame_callback(uart_frame_rx_callback_t cb);
+// ***********************************************
+
 
 /// @} UART
 #endif /* _DRIVER_UART_H_ */
-

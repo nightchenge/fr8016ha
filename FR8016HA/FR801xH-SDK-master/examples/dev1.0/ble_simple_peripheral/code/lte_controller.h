@@ -1,18 +1,19 @@
 /*
- * @Descripttion: 
- * @version: 
+ * @Descripttion:
+ * @version:
  * @Author: zhouhao
  * @Date: 2025-09-17 10:30:13
  * @LastEditors: zhouhao
- * @LastEditTime: 2025-09-18 09:41:07
+ * @LastEditTime: 2025-10-23 13:42:37
  */
 #ifndef LTE_CONTROLLER_H
 #define LTE_CONTROLLER_H
-#include <stdint.h> 
+#include <stdint.h>
 #include <stdbool.h>
 
 // LTE模块状态机
-typedef enum {
+typedef enum
+{
     LTE_STATE_OFF,
     LTE_STATE_POWERING_ON,
     LTE_STATE_WAITING_FOR_IMEI,
@@ -42,10 +43,15 @@ void lte_controller_power_off(void);
 lte_state_t lte_controller_get_state(void);
 
 /**
+ * @brief 设置当前LTE模块状态
+ * @param state 要设置的状态
+ */
+void lte_controller_set_state(lte_state_t state);
+/**
  * @brief 获取解析到的IMEI字符串
  * @return const char* IMEI字符串指针,如果未获取到则为NULL
  */
-const char* lte_controller_get_imei(void);
+const char *lte_controller_get_imei(void);
 
 /**
  * @brief 通过LTE模块发送数据 (UART透传)

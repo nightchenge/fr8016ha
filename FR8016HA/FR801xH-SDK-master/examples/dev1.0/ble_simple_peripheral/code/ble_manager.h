@@ -1,10 +1,10 @@
 /*
- * @Descripttion: 
- * @version: 
+ * @Descripttion:
+ * @version:
  * @Author: zhouhao
  * @Date: 2025-09-17 10:30:56
  * @LastEditors: zhouhao
- * @LastEditTime: 2025-09-18 10:31:25
+ * @LastEditTime: 2025-10-23 13:41:50
  */
 #ifndef BLE_MANAGER_H
 #define BLE_MANAGER_H
