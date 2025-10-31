@@ -10,11 +10,11 @@
 #define OTA_SERVICE_H
 
 /*
- * INCLUDES (包含头文件)
+ * INCLUDES (锟斤拷锟斤拷头锟侥硷拷)
  */
 
 /*
- * MACROS (宏定义)
+ * MACROS (锟疥定锟斤拷)
  */
 #define OTA_SVC_UUID                {0x00, 0xFE, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xF0, 0x02} 
     
@@ -28,7 +28,7 @@
 #define OTAS_NOTIFY_DATA_SIZE           20
 
 /*
- * CONSTANTS (常量定义)
+ * CONSTANTS (锟斤拷锟斤拷锟斤拷锟斤拷)
  */
 enum
 {
@@ -56,26 +56,26 @@ enum
 };
 
 /*
- * TYPEDEFS (类型定义)
+ * TYPEDEFS (锟斤拷锟酵讹拷锟斤拷)
  */
 
 /*
- * GLOBAL VARIABLES (全局变量)
+ * GLOBAL VARIABLES (全锟街憋拷锟斤拷)
  */
 
 /*
- * LOCAL VARIABLES (本地变量)
+ * LOCAL VARIABLES (锟斤拷锟截憋拷锟斤拷)
  */
 
 
 /*
- * PUBLIC FUNCTIONS (全局函数)
+ * PUBLIC FUNCTIONS (全锟街猴拷锟斤拷)
  */
  /*********************************************************************
  * @fn      ota_gatt_add_service
  *
  * @brief   Simple Profile add GATT service function.
- *          添加GATT service到ATT的数据库里面。
+ *          锟斤拷锟斤拷GATT service锟斤拷ATT锟斤拷锟斤拷锟捷匡拷锟斤拷锟芥。
  *
  * @param   None.
  *
@@ -96,6 +96,9 @@ void ota_gatt_add_service(void);
  * @return  none.
  */
 void ota_gatt_report_notify(uint8_t conidx, uint8_t *p_data, uint16_t len);
+
+// 淇敼鍚庣殑浠ｇ爜
+void ota_service_send_ble_notify(uint8_t conidx, uint8_t *p_data, uint16_t len);
 
 #endif
 

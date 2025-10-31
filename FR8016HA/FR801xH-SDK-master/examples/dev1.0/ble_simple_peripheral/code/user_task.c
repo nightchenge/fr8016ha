@@ -56,7 +56,12 @@ void system_periodic_task(void)
 // 按键和UART事件处理任务
 static int user_task_func(os_event_t *param)
 {
-
+    if(param->event_id == USER_OTA_COMMAND)
+    {
+       // app_otas_recv_data(0,param->param, param->param_len);
+        app_otas_recv_data_uart(param->param, param->param_len);
+        return EVT_CONSUMED;
+    }
     // 处理UART接收事件
     if (param->event_id == USER_EVT_UART0_RX || param->event_id == USER_EVT_UART1_RX)
     {

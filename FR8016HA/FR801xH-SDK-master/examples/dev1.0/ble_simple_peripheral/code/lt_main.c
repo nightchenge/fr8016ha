@@ -13,6 +13,8 @@
 #include "lte_controller.h"
 #include "led_indicator.h"
 
+
+#include "ota_manager.h"
 // 引用来自proj_main.c的全局唤醒标志
 extern volatile bool g_wakeup_event;
 extern volatile char g_wakeup_reason;

@@ -38,7 +38,6 @@ void button_timer_stop()
 
 void button_toggle_detected(uint32_t curr_button)
 {
-     co_printf("button_toggle_detected\r\n");
     if(button_io_mask != 0) 
 	{
         curr_button_before_anti_shake = curr_button & button_io_mask;
@@ -72,7 +71,7 @@ void button_send_event(uint8_t event, uint32_t button, uint8_t cnt)
     button_event.src_task_id = button_task_id;
     button_event.param = (void *)&msg;
     button_event.param_len = sizeof(msg);
-     co_printf("button_send_event, event = %d, button = %d, cnt = %d\r\n", event, button, cnt);
+
 
     os_msg_post(g_user_task_id, &button_event);
 
@@ -438,7 +437,6 @@ static void button_anti_shake_timeout_handler(void *param)
 static int button_task_func(os_event_t *event)
 {
 	//printf("wwwww:event:%d.\n",event->event_id);
-      co_printf("button_task_func\r\n");
     switch(event->event_id)
     {
         case BUTTON_TOGGLE:
@@ -452,7 +450,6 @@ static int button_task_func(os_event_t *event)
 void button_init(uint32_t enable_io)
 {
     button_io_mask = enable_io;
-     co_printf("button_init\r\n");
     button_task_id = os_task_create(button_task_func);
     os_timer_init(&button_anti_shake_timer, button_anti_shake_timeout_handler, NULL);
     os_timer_init(&button_pressing_timer, button_pressing_timeout_handler, NULL);

@@ -3,12 +3,14 @@
 
 #include <stdint.h>
 
+
 enum user_event_t
 {
     USER_EVT_AT_COMMAND,
     USER_EVT_BUTTON,
     USER_EVT_UART0_RX,
     USER_EVT_UART1_RX,
+    USER_OTA_COMMAND, // ******************** MODIFIED ********************
 };
 
 enum user_power_t

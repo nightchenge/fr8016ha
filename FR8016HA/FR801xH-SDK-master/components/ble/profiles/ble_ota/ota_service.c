@@ -7,7 +7,7 @@
  */
 
 /*
- * INCLUDES (°üº¬Í·ÎÄ¼þ)
+ * INCLUDES (ï¿½ï¿½ï¿½ï¿½Í·ï¿½Ä¼ï¿½)
  */
 #include <stdio.h>
 #include <string.h>
@@ -20,11 +20,11 @@
 #include "driver_uart.h"
 
 /*
- * MACROS (ºê¶¨Òå)
+ * MACROS (ï¿½ê¶¨ï¿½ï¿½)
  */
 
 /*
- * CONSTANTS (³£Á¿¶¨Òå)
+ * CONSTANTS (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
  */
 
 
@@ -47,27 +47,27 @@ bool get_upgrade_state()
 }
 
 /*
- * TYPEDEFS (ÀàÐÍ¶¨Òå)
+ * TYPEDEFS (ï¿½ï¿½ï¿½Í¶ï¿½ï¿½ï¿½)
  */
 
 /*
- * GLOBAL VARIABLES (È«¾Ö±äÁ¿)
+ * GLOBAL VARIABLES (È«ï¿½Ö±ï¿½ï¿½ï¿½)
  */
 
 
 /*
- * LOCAL VARIABLES (±¾µØ±äÁ¿)
+ * LOCAL VARIABLES (ï¿½ï¿½ï¿½Ø±ï¿½ï¿½ï¿½)
  */
 
 /*********************************************************************
  * Profile Attributes - Table
- * Ã¿Ò»Ïî¶¼ÊÇÒ»¸öattributeµÄ¶¨Òå¡£
- * µÚÒ»¸öattributeÎªService µÄµÄ¶¨Òå¡£
- * Ã¿Ò»¸öÌØÕ÷Öµ(characteristic)µÄ¶¨Òå£¬¶¼ÖÁÉÙ°üº¬Èý¸öattributeµÄ¶¨Òå£»
- * 1. ÌØÕ÷ÖµÉùÃ÷(Characteristic Declaration)
- * 2. ÌØÕ÷ÖµµÄÖµ(Characteristic value)
- * 3. ÌØÕ÷ÖµÃèÊö·û(Characteristic description)
- * Èç¹ûÓÐnotification »òÕßindication µÄ¹¦ÄÜ£¬Ôò»á°üº¬ËÄ¸öattributeµÄ¶¨Òå£¬³ýÁËÇ°Ãæ¶¨ÒåµÄÈý¸ö£¬»¹»áÓÐÒ»¸öÌØÕ÷Öµ¿Í»§¶ËÅäÖÃ(client characteristic configuration)¡£
+ * Ã¿Ò»ï¿½î¶¼ï¿½ï¿½Ò»ï¿½ï¿½attributeï¿½Ä¶ï¿½ï¿½å¡£
+ * ï¿½ï¿½Ò»ï¿½ï¿½attributeÎªService ï¿½ÄµÄ¶ï¿½ï¿½å¡£
+ * Ã¿Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµ(characteristic)ï¿½Ä¶ï¿½ï¿½å£¬ï¿½ï¿½ï¿½ï¿½ï¿½Ù°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½attributeï¿½Ä¶ï¿½ï¿½å£»
+ * 1. ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½(Characteristic Declaration)
+ * 2. ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½Öµ(Characteristic value)
+ * 3. ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(Characteristic description)
+ * ï¿½ï¿½ï¿½ï¿½ï¿½notification ï¿½ï¿½ï¿½ï¿½indication ï¿½Ä¹ï¿½ï¿½Ü£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¸ï¿½attributeï¿½Ä¶ï¿½ï¿½å£¬ï¿½ï¿½ï¿½ï¿½Ç°ï¿½æ¶¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½Í»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(client characteristic configuration)ï¿½ï¿½
  *
  */
 
@@ -175,21 +175,21 @@ static uint16_t ota_gatt_msg_handler(gatt_msg_t *p_msg)
             }
             else if(p_msg->att_idx == OTA_ATT_IDX_CHAR_VALUE_RX)
             {
-                //co_printf("recv:%d.\r\n",p_msg->param.msg.msg_len);
+                co_printf("recv:%d.\r\n",p_msg->param.msg.msg_len);
                 //show_reg(p_msg->param.msg.p_msg_data,5,1);
 				//return 0;
                 app_otas_recv_data(p_msg->conn_idx,p_msg->param.msg.p_msg_data,p_msg->param.msg.msg_len);
             }
 						else if(p_msg->att_idx == OTA_ATT_IDX_CHAR1_VALUE_RX)
-            {   //Ð¡ÒôÏäÓïÒôÉý¼¶Í¸´«
+            {   //Ð¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ï¿½
 								
-								  //Éý¼¶½áÊø
+								  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                 if(p_msg->param.msg.p_msg_data[0] == 0xAF && p_msg->param.msg.p_msg_data[1] == 0xAF)
                 {  
 										uart1_write(p_msg->param.msg.p_msg_data, p_msg->param.msg.msg_len, NULL); 									
                     set_upgrade_state(0);
                 }
-                //¿ªÊ¼Éý¼¶
+                //ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½
                 else if(p_msg->param.msg.p_msg_data[0] == 0xAA && p_msg->param.msg.p_msg_data[1] == 0xAB)
                 {
 									if(p_msg->param.msg.p_msg_data[2]==0xB1 || p_msg->param.msg.p_msg_data[2]==0xB2 || p_msg->param.msg.p_msg_data[2]==0xB3 || p_msg->param.msg.p_msg_data[2]==0xB4)
@@ -197,7 +197,7 @@ static uint16_t ota_gatt_msg_handler(gatt_msg_t *p_msg)
                     set_upgrade_state(1);  
 									}
                 }             
-                //·¢ËÍÎÄ¼þ
+                //ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½
                 if(get_upgrade_state() == 1)
                 {
                     uint8_t msg[200];                           
@@ -250,11 +250,25 @@ void ota_gatt_report_notify(uint8_t conidx, uint8_t *p_data, uint16_t len)
     }
 }
 
+
+void ota_service_send_ble_notify(uint8_t conidx, uint8_t *p_data, uint16_t len)
+{
+    if (ota_link_ntf_enable)
+    {
+        gatt_ntf_t ntf;
+        ntf.conidx = conidx;
+        ntf.svc_id = ota_svc_id;
+        ntf.att_idx = OTA_ATT_IDX_CHAR_VALUE_NOTI;
+        ntf.data_len = len;
+        ntf.p_data = p_data;
+        gatt_notification(ntf);
+    }
+}
 /*********************************************************************
  * @fn      ota_gatt_add_service
  *
  * @brief   Simple Profile add GATT service function.
- *          Ìí¼ÓGATT serviceµ½ATTµÄÊý¾Ý¿âÀïÃæ¡£
+ *          ï¿½ï¿½ï¿½ï¿½GATT serviceï¿½ï¿½ATTï¿½ï¿½ï¿½ï¿½ï¿½Ý¿ï¿½ï¿½ï¿½ï¿½æ¡£
  *
  * @param   None.
  *

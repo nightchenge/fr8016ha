@@ -4,7 +4,7 @@
  * @Author: houfangting
  * @Date: 2025-10-17 10:30:41
  * @LastEditors: zhouhao
- * @LastEditTime: 2025-10-23 16:27:52
+ * @LastEditTime: 2025-10-28 20:04:42
  */
 #include "lte_controller.h"
 #include "config.h"
@@ -29,6 +29,19 @@
 
 // ******************** MODIFIED ********************
 // UART0专用回调
+
+static void ota_uart0_frame_rx_cb(uint8_t *buffer, uint32_t len)
+{
+    if (g_user_task_id)
+    {
+        os_event_t evt;
+        evt.event_id = USER_OTA_COMMAND; // 新增专用事件ID
+        evt.param = buffer;
+        evt.param_len = len;
+        os_msg_post(g_user_task_id, &evt);
+    }
+}
+
 static void app_uart0_frame_rx_cb(uint8_t *buffer, uint32_t len)
 {
     if (g_user_task_id)
@@ -171,6 +184,14 @@ int lt_handle_uart0_recv(uint8_t *data, int size)
             // 关闭系统
             co_printf("Received sleep command from LTE module.\r\n");
             g_shutdown_request_from_uart = true;
+        }
+        else if (data[0] == 0xAA && data[1] == 0xAA && data[2] == 0xff && data[3] == 0xff)
+        {
+            uart0_register_frame_callback(ota_uart0_frame_rx_cb);
+            // ota 升级开始
+            co_printf("ota upgrade start.\r\n");
+
+           // g_shutdown_request_from_uart = true;
         }
         else
         {
