@@ -26,14 +26,14 @@
 
 typedef struct uart0recvflag
 {
-	uint8_t rxbuf[512];
+	uint8_t rxbuf[1024];
 	uint8_t rxlen;
 	uint8_t uart0recvflag;
 } S_UART0REC;
 
 typedef struct uart1recvflag
 {
-	uint8_t rxbuf[512];
+	uint8_t rxbuf[1024];
 	uint8_t rxlen;
 	uint8_t uart1recvflag;
 } S_UART1REC;
@@ -129,7 +129,7 @@ void uart0_recv_func(void *arg)
     {
         uint8_t *buffer = uart0_recbuf_get();
         uint32_t len = uart0_reclen_get();
-        
+        co_printf("uart0_recv_func: =len: %d\r\n",len);
         // 仅当数据长度大于0时复制并回调
         if (len > 0)
         {
@@ -191,9 +191,9 @@ __attribute__((section("ram_code"))) void uart0_isr_ram(void)
 			c = uart0_reg->u1.data;
 			// uart_putc_noint(UART1,c);
 			s_uart0rec.rxbuf[s_uart0rec.rxlen] = c;
-			os_timer_start(&uart0_recv_timer, 50, false); // 50ms定时器，超时判断为一帧数据
+			os_timer_start(&uart0_recv_timer, 20, false); // 50ms定时器，超时判断为一帧数据
 			s_uart0rec.rxlen++;
-			if (s_uart0rec.rxlen > 512)
+			if (s_uart0rec.rxlen > 1024)
 				s_uart0rec.rxlen = 0;
 		}
 	}
